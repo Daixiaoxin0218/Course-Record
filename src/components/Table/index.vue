@@ -5,7 +5,6 @@
     max-height="calc(100vh - 290px)"
     border
   >
-    <!-- 子菜单 -->
     <el-table-column type="expand">
       <template #default="props">
         <el-table :data="props.row.family">
@@ -55,7 +54,6 @@
         </el-table>
       </template>
     </el-table-column>
-    <!-- 父菜单 -->
     <el-table-column
       v-for="(item, index) in porp.tableFatherLists"
       :key="index"

@@ -8,8 +8,8 @@
       />
     </div>
     <el-button type="primary" style="margin-left: 10px">搜索</el-button>
-    <el-button type="primary" @click="addUser">新增用户</el-button>
-    <el-button type="primary">新增课程</el-button>
+    <el-button type="primary" @click="clickAdd('user')">新增用户</el-button>
+    <el-button type="primary" @click="clickAdd('course')">新增课程</el-button>
   </div>
 
   <div class="user_table">
@@ -23,36 +23,29 @@
     />
   </div>
 
-  <div
-    style="border-top: 1px solid var(--el-border-color-lighter); padding: 20px"
-  >
-    <el-pagination
-      v-model:current-page="currentPage4"
-      v-model:page-size="pageSize4"
-      :page-sizes="[10, 20, 30, 50, 100]"
-      :size="size"
-      :disabled="disabled"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+  <div class="user_pagination">
+    <user-pagination
+      :total="total"
+      :currentPage="currentPage"
+      :pageSize="pageSize"
+      @clickStrip="clickStrip"
+      @clickPage="clickPage"
     />
   </div>
 
   <user-dialog
     :dialogControl="dialogControl"
     :dialogTitle="dialogTitle"
-    :dialogWidth="500"
-    @dialogClick="dialogClick"
-  />
-  <!-- <user-form /> -->
+  >
+    <user-form :distinction="distinction" @dialogClick="dialogClick" />
+  </user-dialog>
 </template>
 
 <script lang="ts" setup>
 import UserTable from "@/components/Table/index.vue";
+import UserPagination from "@/components/Pagination/index.vue";
 import UserDialog from "@/components/Dialog/index.vue";
-// import UserForm from '@/components/Form/index.vue'
+import UserForm from "@/components/Form/index.vue";
 import { ref } from "vue";
 import {
   tableFatherLists,
@@ -60,34 +53,22 @@ import {
   tableFatherButton,
   tableSonButton,
 } from "./type";
-import type { User } from "./type";
-import type { ComponentSize } from "element-plus";
+
+const total = ref(100);
+const currentPage = ref(1);
+const pageSize = ref(10);
+
+const distinction = ref<string>("user");
 
 const dialogTitle = ref("新增用户");
 const dialogControl = ref(false);
 
 const input = ref("");
-const currentPage4 = ref<Number>(1);
-const pageSize4 = ref<Number>(10);
-const size = ref<ComponentSize>("default");
-const background = ref<Boolean>(false);
-const disabled = ref<Boolean>(false);
 
-const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
-};
-const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
-};
+const clickAdd = (param: string) => {
+  console.log(param);
 
-const handleEdit = (index: number, row: User) => {
-  console.log(index, row);
-};
-const handleDelete = (index: number, row: User) => {
-  console.log(index, row);
-};
-
-const addUser = () => {
+  distinction.value = param;
   dialogControl.value = true;
 };
 
@@ -142,14 +123,20 @@ for (let i = 0; i < 20; ++i) {
     ],
   });
 }
-const clickMethod = (param: string, index: number, row: User) => {
-  console.log(param, index, row);
-};
+
 const dialogClick = (param: boolean) => {
   dialogControl.value = param;
 };
 const clickListData = (param: string, index: number, row: object) => {
   console.log(param, index, row);
+};
+const clickStrip = (param: number) => {
+  console.log(param);
+  pageSize.value = param;
+};
+const clickPage = (param: number) => {
+  console.log(param);
+  currentPage.value = param;
 };
 </script>
 <style scoped>
@@ -158,7 +145,13 @@ const clickListData = (param: string, index: number, row: object) => {
   padding: 20px;
   display: flex;
 }
+
 .user_table {
+  padding: 20px;
+}
+
+.user_pagination {
+  border-top: 1px solid var(--el-border-color-lighter);
   padding: 20px;
 }
 </style>

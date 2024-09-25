@@ -1,3 +1,10 @@
+/*
+ * @Description: 当前页面描述
+ * @Author: aliyun7571578412
+ * @Date: 2024-09-23 09:46:59
+ * @LastEditors: aliyun7571578412
+ * @LastEditTime: 2024-09-24 21:26:50
+ */
 import { reactive } from "vue";
 
 interface tableListsType {

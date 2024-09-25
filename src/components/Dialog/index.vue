@@ -3,20 +3,25 @@
     v-model="porps.dialogControl"
     :title="porps.dialogTitle"
     :width="porps.dialogWidth"
+    :destroy-on-close="true"
+    :show-close="false"
+    style="height: 500px;"
     align-center
   >
-    <slot></slot>
-    <template #footer>
+    <div class="dialog_slot">
+      <slot></slot>
+    </div>
+    <!-- <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogClick()">确认</el-button>
         <el-button type="primary" @click="dialogClick()"> 取消 </el-button>
       </div>
-    </template>
+    </template> -->
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ref, defineEmits, defineProps } from "vue";
-import type { EmitsOptions, PropType } from "vue";
+import { ref, defineProps } from "vue";
+import type { PropType } from "vue";
 
 const centerDialogVisible = ref(false);
 const porps = defineProps({
@@ -30,13 +35,12 @@ const porps = defineProps({
   },
   dialogWidth: {
     type: String,
-    default: "500",
+    default: "900",
   },
 });
-const emit = defineEmits(["dialogClick" as string] as EmitsOptions);
-
-const dialogClick = () => {
-  centerDialogVisible.value = false;
-  emit("dialogClick", centerDialogVisible.value);
-};
 </script>
+<style scoped>
+.dialog_slot{
+  padding: 30px;
+}
+</style>
