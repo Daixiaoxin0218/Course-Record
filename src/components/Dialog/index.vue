@@ -5,6 +5,7 @@
     :width="porps.dialogWidth"
     :destroy-on-close="true"
     :show-close="false"
+    :close-on-click-modal="false"
     style="height: 500px;"
     align-center
   >
@@ -20,10 +21,9 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps } from "vue";
+import { defineProps } from "vue";
 import type { PropType } from "vue";
 
-const centerDialogVisible = ref(false);
 const porps = defineProps({
   dialogControl: {
     type: Boolean as PropType<true | false>,
@@ -31,7 +31,7 @@ const porps = defineProps({
   },
   dialogTitle: {
     type: String,
-    default: "",
+    default: "新增用户",
   },
   dialogWidth: {
     type: String,

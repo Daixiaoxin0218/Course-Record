@@ -1,31 +1,32 @@
 <template>
   <el-form
     ref="ruleFormRef"
-    :model="ruleForm"
+    :model="ruleForData"
     :rules="rules"
     label-width="auto"
     :size="formSize"
     status-icon
-    style="height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    style="
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     "
   >
     <div class="form_write">
       <el-form-item v-if="judge" label="姓名" prop="name" style="width: 370px">
         <el-select
-          v-model="value"
+          v-model="ruleForData.authorId"
           filterable
           placeholder="请选择姓名"
           style="width: 370px"
           v-if="judge"
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in porps.userData"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -36,10 +37,10 @@
         :prop="item.prop"
         style="width: 370px"
       >
-        <el-input v-model="ruleForm.name" :placeholder="item.hint" />
+        <el-input v-model="ruleForData[item.prop]" :placeholder="item.hint" />
       </el-form-item>
       <el-form-item v-if="!judge" label="性别" prop="sex" style="width: 370px">
-        <el-select v-model="ruleForm.region" placeholder="请选择性别">
+        <el-select v-model="ruleForData.sex" placeholder="请选择性别">
           <el-option label="男" :value="1" />
           <el-option label="女" :value="2" />
         </el-select>
@@ -53,7 +54,7 @@
         style="width: 370px"
       >
         <el-date-picker
-          v-model="value3"
+          v-model="ruleForData[item.prop]"
           type="datetime"
           placeholder="请输入时间"
           style="width: 100%"
@@ -84,11 +85,20 @@ const porps = defineProps({
     type: String,
     default: "",
   },
+  formData: {
+    type: Object,
+    default: {},
+  },
+  userData: {
+    type: Object,
+    default: {},
+  },
 });
 
 const rules = ref();
 const judge = ref<boolean>();
 const Input = ref();
+const ruleForData = ref()
 
 watch(
   toRef(porps, "distinction"),
@@ -108,29 +118,27 @@ watch(
     deep: true,
   }
 );
+watch(
+  toRef(porps, "formData"),
+  (to: Object) => {
+    ruleForData.value = to
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
 
-interface RuleForm {
-  name: string;
-  region: number | any;
-  phone: number | any;
-}
-const value3 = ref("");
 const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive<RuleForm>({
-  name: "",
-  region: null,
-  phone: null,
-});
-
-const emit = defineEmits(["dialogClick" as string]);
+const emit = defineEmits(<Array<string>>["dialogClick", 'dialogForm']);
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      emit("dialogClick", false);
-      console.log(ruleForm);
+      emit('dialogForm', ruleForData.value)
+      resetForm(formEl)
     } else {
       console.log("error submit!", fields);
     }
@@ -142,30 +150,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
   formEl.resetFields();
   emit("dialogClick", false);
 };
-
-const value = ref("");
-const options = [
-  {
-    value: "Option1",
-    label: "Option1",
-  },
-  {
-    value: "Option2",
-    label: "Option2",
-  },
-  {
-    value: "Option3",
-    label: "Option3",
-  },
-  {
-    value: "Option4",
-    label: "Option4",
-  },
-  {
-    value: "Option5",
-    label: "Option5",
-  },
-];
 </script>
 <style scoped>
 .form_write {

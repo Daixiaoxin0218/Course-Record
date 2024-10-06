@@ -8,7 +8,7 @@ interface RuleForm {
 
 export const userInput = [
   { label: "姓名", prop: "name", hint: "请输入姓名" },
-  { label: "手机号", prop: "sex", hint: "请输入手机号" },
+  { label: "手机号", prop: "phone", hint: "请输入手机号" },
 ];
 
 export const userVerify = <FormRules<RuleForm>>{
@@ -55,7 +55,7 @@ export const courseTime = [
 ];
 
 export const courseVerify = <FormRules<RuleForm>>{
-  name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+  authorId: [{ required: true, message: "请选择姓名", trigger: "change" }],
   course_name: [{ required: true, message: "请输入课程", trigger: "blur" }],
   course_price: [
     { required: true, message: "请输入课程价格", trigger: "blur" },

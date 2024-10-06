@@ -7,7 +7,7 @@
   >
     <el-table-column type="expand">
       <template #default="props">
-        <el-table :data="props.row.family">
+        <el-table :data="props.row.posts">
           <el-table-column
             v-for="(item, index) in porp.tableSonLists"
             :key="index"

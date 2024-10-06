@@ -25,20 +25,29 @@
 
   <div class="user_pagination">
     <user-pagination
-      :total="total"
-      :currentPage="currentPage"
-      :pageSize="pageSize"
+      :total="pagerData.total"
+      :currentPage="pagerData.page"
+      :pageSize="pagerData.size"
       @clickStrip="clickStrip"
       @clickPage="clickPage"
     />
   </div>
 
-  <user-dialog
-    :dialogControl="dialogControl"
-    :dialogTitle="dialogTitle"
-  >
-    <user-form :distinction="distinction" @dialogClick="dialogClick" />
+  <user-dialog :dialogControl="dialogControl" :dialogTitle="dialogTitle">
+    <user-form
+      :distinction="distinction"
+      :formData="formData"
+      :userData="userData"
+      @dialogClick="dialogClick"
+      @dialogForm="dialogForm"
+    />
   </user-dialog>
+  <user-eimessage
+    :visible="eimessSwitch"
+    :options="{}"
+    :judge="eimessageJudge"
+    @ifRemove="ifRemove"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -46,7 +55,15 @@ import UserTable from "@/components/Table/index.vue";
 import UserPagination from "@/components/Pagination/index.vue";
 import UserDialog from "@/components/Dialog/index.vue";
 import UserForm from "@/components/Form/index.vue";
-import { ref } from "vue";
+import UserEimessage from "@/components/Eimessage/index.vue";
+import { ref, onMounted } from "vue";
+import {
+  userList,
+  userAdd,
+  courseAdd,
+  userDelete,
+  courseDelete,
+} from "@/api/user";
 import {
   tableFatherLists,
   tableSonLists,
@@ -54,90 +71,156 @@ import {
   tableSonButton,
 } from "./type";
 
-const total = ref(100);
-const currentPage = ref(1);
-const pageSize = ref(10);
-
-const distinction = ref<string>("user");
-
-const dialogTitle = ref("新增用户");
-const dialogControl = ref(false);
-
 const input = ref("");
 
-const clickAdd = (param: string) => {
-  console.log(param);
+/**
+ * 表格数据
+ * @param userData 用户数据
+ * @param tableData 表格数据
+ * @param pagerData 列表分页数
+ * @function userDataList() 列表
+ */
+const userData = ref<Array<any>>([])
+const tableData = ref<Array<any>>([]);
+const pagerData = ref({ total: 0, page: 1, size: 10 });
 
+const userDataList = () => {
+  userList(pagerData.value).then((res) => {
+    const { data, page, size, total } = res.data;
+    tableData.value = data;
+    pagerData.value.page = page;
+    pagerData.value.size = size;
+    pagerData.value.total = total;
+    userData.value = tableData.value.map((item: any) => ({
+      id: item.id,
+      name: item.name
+    }))
+  });
+};
+
+/**
+ * 新增按钮
+ * @param param 区分参数
+ */
+const clickAdd = (param: string) => {
+  param == "user"
+    ? (dialogTitle.value = "新增用户")
+    : (dialogTitle.value = "新增课程");
   distinction.value = param;
   dialogControl.value = true;
 };
 
-const tableData: any[] = [];
-for (let i = 0; i < 20; ++i) {
-  tableData.push({
-    key: i,
-    name: `张三 ${i + 1}`,
-    sex: "女",
-    course: "基础班",
-    phone: 15642567547,
-    family: [
-      {
-        course_name: "基础班",
-        class_hour: "36",
-        course_price: "599",
-        every_class: "16/课",
-        apply_time: "2014-12-24 23:12:00",
-        surplus: "20",
-        state: "正常",
-        start_date: "2024-9-3 23:12:00",
-        deadline_date: "2025-9-3 23:12:00",
-        stop_card: "",
-        resume_classes: "",
-      },
-      {
-        course_name: "进阶班",
-        class_hour: "36",
-        course_price: "999",
-        every_class: "27/课",
-        apply_time: "2014-12-24 23:12:00",
-        surplus: "0",
-        state: "到期",
-        start_date: "2024-9-3 23:12:00",
-        deadline_date: "2025-9-3 23:12:00",
-        stop_card: "",
-        resume_classes: "",
-      },
-      {
-        course_name: "舞蹈",
-        class_hour: "12",
-        course_price: "999",
-        every_class: "83/课",
-        apply_time: "2014-12-24 23:12:00",
-        surplus: "5",
-        state: "停卡",
-        start_date: "2024-9-3 23:12:00",
-        deadline_date: "2025-9-3 23:12:00",
-        stop_card: "2024-10-3 23:12:00",
-        resume_classes: "2024-10-3 23:12:00",
-      },
-    ],
-  });
-}
+const formData = ref({});
 
-const dialogClick = (param: boolean) => {
-  dialogControl.value = param;
-};
+const distinction = ref<string>("user");
+const dialogTitle = ref<string>("");
+const dialogControl = ref(false);
+const eimessageJudge = ref("fatherDelete");
+const SingleData = ref();
+
 const clickListData = (param: string, index: number, row: object) => {
   console.log(param, index, row);
+  switch (param) {
+    case "fatherEdit":
+      distinction.value = "user";
+      dialogControl.value = true;
+      dialogTitle.value = "修改用户";
+      formData.value = row;
+      break;
+    case "sonEdit":
+      distinction.value = "course";
+      dialogControl.value = true;
+      dialogTitle.value = "修改课程";
+      formData.value = row;
+      break;
+    case "fatherDelete":
+      eimessageJudge.value = "fatherDelete";
+      eimessSwitch.value = true;
+      SingleData.value = row;
+      break;
+    case "sonDelete":
+      eimessageJudge.value = "sonDelete";
+      eimessSwitch.value = true;
+      SingleData.value = row;
+      break;
+    default:
+  }
 };
+
+// const dialogForm = (param: any) => {
+//   console.log(param, dialogTitle.value);
+//   // userAdd(param).then(res => {
+//   //   userDataList();
+//   // })
+// }
+
+const dialogForm = (param: any) => {
+  let url = ref();
+  console.log(param);
+  switch (dialogTitle.value) {
+    case "新增用户":
+      url.value = userAdd
+      break;
+    case "新增课程":
+      // url.value = courseAdd
+      break;
+    case "修改用户":
+      break;
+    case "修改课程":
+      break;
+    default:
+      console.log('错误!');
+  }
+  url.value(param).then((res: any) => {
+    userDataList();
+  })
+};
+
+/**
+ * 删除弹窗提示
+ * @param eimessSwitch 弹窗参数
+ * @param param 接受参数
+ * @param judge 关闭参数
+ */
+let eimessSwitch = ref<boolean>(false);
+
+const ifRemove = (param: any) => {
+  eimessSwitch.value = false;
+  if (param == "cancel") return;
+  const url = param === "sonDelete" ? courseDelete : userDelete;
+  const { id } = SingleData.value;
+  url({ id: id }).then((res) => {
+    userDataList();
+  });
+};
+
+/**
+ * 弹窗关闭
+ * @param param 关闭参数
+ */
+const dialogClick = (param: boolean) => {
+  formData.value = {};
+  dialogControl.value = param;
+};
+
+/**
+ * 分页器
+ * @param param 页数
+ */
 const clickStrip = (param: number) => {
-  console.log(param);
-  pageSize.value = param;
+  pagerData.value.size = param;
+  userDataList();
 };
+/**
+ * 分页器
+ * @param param 条数
+ */
 const clickPage = (param: number) => {
-  console.log(param);
-  currentPage.value = param;
+  pagerData.value.page = param;
+  userDataList();
 };
+
+onMounted(userDataList);
 </script>
 <style scoped>
 .user_head {
