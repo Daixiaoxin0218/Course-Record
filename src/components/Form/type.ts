@@ -7,8 +7,8 @@ interface RuleForm {
 }
 
 export const userInput = [
-  { label: "姓名", prop: "name", hint: "请输入姓名" },
-  { label: "手机号", prop: "phone", hint: "请输入手机号" },
+  { label: "姓名", prop: "name", hint: "请输入姓名", type: 'String' },
+  { label: "手机号", prop: "phone", hint: "请输入手机号", type: 'String' },
 ];
 
 export const userVerify = <FormRules<RuleForm>>{
@@ -25,11 +25,30 @@ export const userVerify = <FormRules<RuleForm>>{
 };
 
 export const courseInput = [
-  { label: "课程", prop: "course_name", hint: "请输入课程" },
-  { label: "课程价格", prop: "course_price", hint: "请输入课程价格" },
-  { label: "课时", prop: "class_hour", hint: "请输入课时" },
-  { label: "每节价格", prop: "every_class", hint: "请输入每节价格" },
-  { label: "剩余课时", prop: "surplus", hint: "请输入剩余课时" },
+  {
+    label: "课程名称",
+    prop: "course_name",
+    hint: "请输入课程",
+    type: "String",
+  },
+  {
+    label: "课程价格",
+    prop: "course_price",
+    hint: "请输入课程价格",
+    type: "Number",
+  },
+  { 
+    label: "课时",
+    prop: "class_hour",
+    hint: "请输入课时",
+    type: "Number"
+  },
+  {
+    label: "剩余课时",
+    prop: "surplus",
+    hint: "请输入剩余课时",
+    type: "Number",
+  },
 ];
 export const courseTime = [
   {

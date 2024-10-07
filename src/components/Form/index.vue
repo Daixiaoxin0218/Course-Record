@@ -35,6 +35,7 @@
         :key="item"
         :label="item.label"
         :prop="item.prop"
+        :type="item.type"
         style="width: 370px"
       >
         <el-input v-model="ruleForData[item.prop]" :placeholder="item.hint" />
@@ -98,7 +99,7 @@ const porps = defineProps({
 const rules = ref();
 const judge = ref<boolean>();
 const Input = ref();
-const ruleForData = ref()
+const ruleForData = ref();
 
 watch(
   toRef(porps, "distinction"),
@@ -121,7 +122,7 @@ watch(
 watch(
   toRef(porps, "formData"),
   (to: Object) => {
-    ruleForData.value = to
+    ruleForData.value = to;
   },
   {
     immediate: true,
@@ -131,14 +132,14 @@ watch(
 
 const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
-const emit = defineEmits(<Array<string>>["dialogClick", 'dialogForm']);
+const emit = defineEmits(<Array<string>>["dialogClick", "dialogForm"]);
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      emit('dialogForm', ruleForData.value)
-      resetForm(formEl)
+      emit("dialogForm", ruleForData.value);
+      resetForm(formEl);
     } else {
       console.log("error submit!", fields);
     }

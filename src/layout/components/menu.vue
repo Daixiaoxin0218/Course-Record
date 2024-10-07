@@ -26,7 +26,7 @@ const theme = ref<MenuTheme>("dark");
 const porps = defineProps({
   collapsed: {
     type: Boolean as PropType<true | false>,
-    default: false,
+    default: true,
   },
 });
 

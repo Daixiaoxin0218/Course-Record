@@ -1,13 +1,13 @@
 <template>
   <div class="user_head">
     <div>
-      姓名<el-input
-        v-model="input"
+      用户名<el-input
+        v-model="pagerData.name"
         style="width: 240px; margin-left: 10px"
-        placeholder="请输入姓名"
+        placeholder="请输入用户名"
       />
     </div>
-    <el-button type="primary" style="margin-left: 10px">搜索</el-button>
+    <el-button type="primary" @click="userDataList" style="margin-left: 10px">搜索</el-button>
     <el-button type="primary" @click="clickAdd('user')">新增用户</el-button>
     <el-button type="primary" @click="clickAdd('course')">新增课程</el-button>
   </div>
@@ -57,11 +57,14 @@ import UserDialog from "@/components/Dialog/index.vue";
 import UserForm from "@/components/Form/index.vue";
 import UserEimessage from "@/components/Eimessage/index.vue";
 import { ref, onMounted } from "vue";
+import { convertDateStringsToTimestamps } from '@/utils/method'
 import {
   userList,
   userAdd,
-  courseAdd,
+  userUpdate,
   userDelete,
+  courseAdd,
+  courseUpdate,
   courseDelete,
 } from "@/api/user";
 import {
@@ -71,7 +74,6 @@ import {
   tableSonButton,
 } from "./type";
 
-const input = ref("");
 
 /**
  * 表格数据
@@ -82,7 +84,7 @@ const input = ref("");
  */
 const userData = ref<Array<any>>([])
 const tableData = ref<Array<any>>([]);
-const pagerData = ref({ total: 0, page: 1, size: 10 });
+const pagerData = ref({ total: 0, page: 1, size: 10, name: '' });
 
 const userDataList = () => {
   userList(pagerData.value).then((res) => {
@@ -155,26 +157,36 @@ const clickListData = (param: string, index: number, row: object) => {
 // }
 
 const dialogForm = (param: any) => {
-  let url = ref();
+  
   console.log(param);
   switch (dialogTitle.value) {
     case "新增用户":
-      url.value = userAdd
+      usersInterface(userAdd, param)
       break;
     case "新增课程":
-      // url.value = courseAdd
+      const addTime = convertDateStringsToTimestamps(param);
+      usersInterface(courseAdd, addTime)
       break;
     case "修改用户":
+      const { id, name, phone, sex } = param
+      usersInterface(userUpdate, { id, name, phone, sex })
       break;
     case "修改课程":
+      const updatetTime = convertDateStringsToTimestamps(param);
+      usersInterface(courseUpdate, updatetTime)
       break;
     default:
       console.log('错误!');
   }
-  url.value(param).then((res: any) => {
-    userDataList();
-  })
+  
 };
+
+const usersInterface = (url: any, param: object) => {
+  console.log(param);
+  // url(param).then((res: any) => {
+  //   userDataList();
+  // })
+}
 
 /**
  * 删除弹窗提示

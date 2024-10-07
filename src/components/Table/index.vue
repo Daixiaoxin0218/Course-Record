@@ -11,9 +11,10 @@
           <el-table-column
             v-for="(item, index) in porp.tableSonLists"
             :key="index"
-            :label="item.label"
             :prop="item.prop"
+            :label="item.label"
             :min-width="item.width"
+            :formatter="item.formatter"
             align="center"
             fixed
           />
@@ -57,8 +58,9 @@
     <el-table-column
       v-for="(item, index) in porp.tableFatherLists"
       :key="index"
-      :label="item.label"
       :prop="item.prop"
+      :label="item.label"
+      :formatter="item.formatter"
       :min-width="`${item.width}`"
       align="center"
     />
