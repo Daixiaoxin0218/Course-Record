@@ -56,7 +56,7 @@ import UserDialog from "@/components/Dialog/index.vue";
 import UserForm from "@/components/Form/index.vue";
 import UserEimessage from "@/components/Eimessage/index.vue";
 import { ref, onMounted } from "vue";
-import { convertDateStringsToTimestamps } from "@/utils/method";
+import { convertDateStringsToTimestamps, convertPropertiesToNumber } from "@/utils/method";
 import {
   userList,
   userAdd,
@@ -131,7 +131,8 @@ const clickListData = (param: string, index: number, row: any) => {
       distinction.value = "course";
       dialogControl.value = true;
       dialogTitle.value = "修改课程";
-      formData.value = row;
+      formData.value = convertPropertiesToNumber(row);
+      console.log(convertPropertiesToNumber(row));
       break;
     case "fatherDelete":
       eimessageJudge.value = "fatherDelete";

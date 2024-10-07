@@ -58,6 +58,8 @@
           v-model="ruleForData[item.prop]"
           type="datetime"
           placeholder="请输入时间"
+          format="YYYY/MM/DD hh:mm:ss"
+          value-format="x"
           style="width: 100%"
         />
       </el-form-item>

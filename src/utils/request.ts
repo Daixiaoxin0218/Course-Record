@@ -1,10 +1,3 @@
-/*
- * @Description: 当前页面描述
- * @Author: aliyun7571578412
- * @Date: 2024-09-25 14:00:00
- * @LastEditors: aliyun7571578412
- * @LastEditTime: 2024-10-07 14:27:42
- */
 import axios from "axios";
 import type {
   AxiosInstance,
