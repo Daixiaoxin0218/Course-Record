@@ -1,3 +1,10 @@
+/*
+ * @Description: 当前页面描述
+ * @Author: aliyun7571578412
+ * @Date: 2024-09-25 14:00:00
+ * @LastEditors: aliyun7571578412
+ * @LastEditTime: 2024-10-07 14:27:42
+ */
 import axios from "axios";
 import type {
   AxiosInstance,
@@ -34,7 +41,9 @@ service.interceptors.response.use(
       );
       return Promise.reject(new Error("Error: " + response.status));
     } else {
-      ElMessage({ message: response.data.data.message, type: "success" });
+      if(response.data.data.message != '获取成功'){
+        ElMessage({ message: response.data.data.message, type: "success" });
+      }
       return response.data;
     }
   },

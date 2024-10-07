@@ -28,14 +28,20 @@
             <template #default="scope">
               <el-tag
                 :type="
-                  scope.row.state === '正常'
+                  scope.row.state === 1
                     ? 'success'
-                    : scope.row.state === '停卡'
+                    : scope.row.state === 2
                     ? 'warning'
                     : 'danger'
                 "
                 disable-transitions
-                >{{ scope.row.state }}</el-tag
+                >{{
+                  scope.row.state === 1
+                    ? "正常"
+                    : scope.row.state === 2
+                    ? "停卡"
+                    : "到期"
+                }}</el-tag
               >
             </template>
           </el-table-column>
@@ -105,10 +111,10 @@ const porp = defineProps({
   },
 });
 
-const emits = defineEmits(['clickListData' as string])
+const emits = defineEmits(["clickListData" as string]);
 
 const clickMethod = (discern: any, $index: any, row: any) => {
-  emits('clickListData', discern, $index, row)
+  emits("clickListData", discern, $index, row);
 };
 </script>
 

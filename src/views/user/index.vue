@@ -7,11 +7,12 @@
         placeholder="请输入用户名"
       />
     </div>
-    <el-button type="primary" @click="userDataList" style="margin-left: 10px">搜索</el-button>
+    <el-button type="primary" @click="userDataList" style="margin-left: 10px"
+      >搜索</el-button
+    >
     <el-button type="primary" @click="clickAdd('user')">新增用户</el-button>
     <el-button type="primary" @click="clickAdd('course')">新增课程</el-button>
   </div>
-
   <div class="user_table">
     <user-table
       :tableData="tableData"
@@ -22,7 +23,6 @@
       @clickListData="clickListData"
     />
   </div>
-
   <div class="user_pagination">
     <user-pagination
       :total="pagerData.total"
@@ -32,7 +32,6 @@
       @clickPage="clickPage"
     />
   </div>
-
   <user-dialog :dialogControl="dialogControl" :dialogTitle="dialogTitle">
     <user-form
       :distinction="distinction"
@@ -57,7 +56,7 @@ import UserDialog from "@/components/Dialog/index.vue";
 import UserForm from "@/components/Form/index.vue";
 import UserEimessage from "@/components/Eimessage/index.vue";
 import { ref, onMounted } from "vue";
-import { convertDateStringsToTimestamps } from '@/utils/method'
+import { convertDateStringsToTimestamps } from "@/utils/method";
 import {
   userList,
   userAdd,
@@ -74,7 +73,6 @@ import {
   tableSonButton,
 } from "./type";
 
-
 /**
  * 表格数据
  * @param userData 用户数据
@@ -82,9 +80,9 @@ import {
  * @param pagerData 列表分页数
  * @function userDataList() 列表
  */
-const userData = ref<Array<any>>([])
+const userData = ref<Array<any>>([]);
 const tableData = ref<Array<any>>([]);
-const pagerData = ref({ total: 0, page: 1, size: 10, name: '' });
+const pagerData = ref({ total: 0, page: 1, size: 10, name: "" });
 
 const userDataList = () => {
   userList(pagerData.value).then((res) => {
@@ -95,8 +93,8 @@ const userDataList = () => {
     pagerData.value.total = total;
     userData.value = tableData.value.map((item: any) => ({
       id: item.id,
-      name: item.name
-    }))
+      name: item.name,
+    }));
   });
 };
 
@@ -120,7 +118,7 @@ const dialogControl = ref(false);
 const eimessageJudge = ref("fatherDelete");
 const SingleData = ref();
 
-const clickListData = (param: string, index: number, row: object) => {
+const clickListData = (param: string, index: number, row: any) => {
   console.log(param, index, row);
   switch (param) {
     case "fatherEdit":
@@ -145,48 +143,48 @@ const clickListData = (param: string, index: number, row: object) => {
       eimessSwitch.value = true;
       SingleData.value = row;
       break;
+    case "signIn":
+      const currentTime: number = Date.now(); // 获取当前时间
+      row.surplus = row.surplus - 1
+      row.register_time = currentTime.toString()
+      usersInterface(courseUpdate, row);
+      break;
     default:
   }
 };
 
-// const dialogForm = (param: any) => {
-//   console.log(param, dialogTitle.value);
-//   // userAdd(param).then(res => {
-//   //   userDataList();
-//   // })
-// }
-
 const dialogForm = (param: any) => {
-  
-  console.log(param);
   switch (dialogTitle.value) {
     case "新增用户":
-      usersInterface(userAdd, param)
+      usersInterface(userAdd, param);
       break;
     case "新增课程":
       const addTime = convertDateStringsToTimestamps(param);
-      usersInterface(courseAdd, addTime)
+      usersInterface(courseAdd, addTime);
       break;
     case "修改用户":
-      const { id, name, phone, sex } = param
-      usersInterface(userUpdate, { id, name, phone, sex })
+      const { id, name, phone, sex } = param;
+      usersInterface(userUpdate, { id, name, phone, sex });
       break;
     case "修改课程":
       const updatetTime = convertDateStringsToTimestamps(param);
-      usersInterface(courseUpdate, updatetTime)
+      usersInterface(courseUpdate, updatetTime);
       break;
     default:
-      console.log('错误!');
+      console.log("错误!");
   }
-  
 };
 
+/**
+ * 接口请求
+ * @param url api方法
+ * @param param 提交数据
+ */
 const usersInterface = (url: any, param: object) => {
-  console.log(param);
-  // url(param).then((res: any) => {
-  //   userDataList();
-  // })
-}
+  url(param).then((res: any) => {
+    userDataList();
+  });
+};
 
 /**
  * 删除弹窗提示

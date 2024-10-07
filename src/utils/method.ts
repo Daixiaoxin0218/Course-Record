@@ -17,7 +17,7 @@ export function convertDateStringsToTimestamps(obj: any): any {
     if (regex.test(value)) {
       const date = new Date(value);
       if (!isNaN(date.getTime())) {
-        result[key] = date.getTime();
+        result[key] = date.getTime().toString();
       }
     }
   }
