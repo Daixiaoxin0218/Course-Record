@@ -132,7 +132,6 @@ const clickListData = (param: string, index: number, row: any) => {
       dialogControl.value = true;
       dialogTitle.value = "修改课程";
       formData.value = convertPropertiesToNumber(row);
-      console.log(convertPropertiesToNumber(row));
       break;
     case "fatherDelete":
       eimessageJudge.value = "fatherDelete";
