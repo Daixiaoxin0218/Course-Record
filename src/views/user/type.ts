@@ -29,13 +29,27 @@ export const tableFatherLists = reactive<Array<tableListsType>>([
     width: "40",
     formatter(row: any, column: any, cellValue: any, index: number) {
       console.log();
-      
+
       return cellValue === 1 ? "男" : "女";
     },
   },
   { label: "电话", prop: "phone", width: "100" },
-  { label: "月销", prop: "monthly_sales", width: "100" },
-  { label: "总销", prop: "total_sales", width: "100" },
+  {
+    label: "月销",
+    prop: "monthly_sales",
+    width: "100",
+    formatter(row: any, column: any, cellValue: any, index: number) {
+      return cellValue === 0 ? "--" : cellValue;
+    },
+  },
+  {
+    label: "总销",
+    prop: "total_sales",
+    width: "100",
+    formatter(row: any, column: any, cellValue: any, index: number) {
+      return cellValue === 0 ? "--" : `${cellValue}元`;
+    },
+  },
 ]);
 
 export const tableSonLists = reactive<Array<tableListsType>>([

@@ -41,7 +41,7 @@ service.interceptors.response.use(
     }
   },
   (error: any) => {
-    ElMessage.error(error.response.data.data.message);
+    ElMessage.error(error?.response?.data?.data?.message);
     return Promise.reject(error);
   }
 );

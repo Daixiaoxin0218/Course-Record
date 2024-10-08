@@ -110,16 +110,29 @@ const clickAdd = (param: string) => {
   dialogControl.value = true;
 };
 
+/**
+ * 弹窗
+ * @param formData 表单数据
+ * @param distinction 表单数据切换
+ * @param dialogTitle 弹窗信息
+ * @param dialogControl 弹窗显/关
+ * @param eimessageJudge 删除弹窗
+ * @param SingleData 删除id
+ */
 const formData = ref({});
-
 const distinction = ref<string>("user");
 const dialogTitle = ref<string>("");
 const dialogControl = ref(false);
 const eimessageJudge = ref("fatherDelete");
 const SingleData = ref();
 
+/**
+ * 列表操作按钮
+ * @param param 按钮类型
+ * @param index 列表下表
+ * @param row 列表内容
+ */
 const clickListData = (param: string, index: number, row: any) => {
-  console.log(param, index, row);
   switch (param) {
     case "fatherEdit":
       distinction.value = "user";
@@ -153,6 +166,10 @@ const clickListData = (param: string, index: number, row: any) => {
   }
 };
 
+/**
+ * 弹窗表单提交
+ * @param param 提交数据
+ */
 const dialogForm = (param: any) => {
   switch (dialogTitle.value) {
     case "新增用户":
