@@ -26,23 +26,9 @@
             filter-placement="bottom-end"
           >
             <template #default="scope">
-              <el-tag
-                :type="
-                  scope.row.state === 1
-                    ? 'success'
-                    : scope.row.state === 2
-                    ? 'warning'
-                    : 'danger'
-                "
-                disable-transitions
-                >{{
-                  scope.row.state === 1
-                    ? "正常"
-                    : scope.row.state === 2
-                    ? "停卡"
-                    : "到期"
-                }}</el-tag
-              >
+              <el-tag :type="stateColor[scope.row.state]" disable-transitions>{{
+                columnState(scope.row.state)
+              }}</el-tag>
             </template>
           </el-table-column>
 
@@ -111,10 +97,24 @@ const porp = defineProps({
   },
 });
 
+const stateColor = ref<any>({
+  1: "success",
+  2: "warning",
+  3: "danger",
+});
+
 const emits = defineEmits(["clickListData" as string]);
 
 const clickMethod = (discern: any, $index: any, row: any) => {
   emits("clickListData", discern, $index, row);
+};
+
+/**
+ * 状态信息替换
+ * @param param 状态类型
+ */
+const columnState = (param: Number) => {
+  return param === 1 ? "正常" : param === 2 ? "停卡" : "到期";
 };
 </script>
 
